@@ -7,6 +7,9 @@
 - [Config on node kafka-01](#Config-on-node-kafka-01)
 - [Config on node kafka-02](#Config-on-node-kafka-02)
 - [Config on node kafka-03](#Config-on-node-kafka-03)
+- [Kafka UI expose info](#Kafka-UI-expose-info)
+- [Kafka expose Kafka JMX metrics](#Kafka-expose-Kafka-JMX-metrics)
+
 
 > [!TIP]
 > Minimum requirement: 3 node (Combine between controller role and broker role), docker & docker-compose installed on server.
