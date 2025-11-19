@@ -12,7 +12,7 @@
   - [Broker 01](#on-node-kafka-broker-01)
   - [Broker 02](#on-node-kafka-broker-02)
   - [Broker 03](#on-node-kafka-broker-03)
-- [Deploy Kafka UI (optional)](#Deploy-Kafka-UI-(Optional))
+- [Deploy Kafka UI (optional)](#Deploy-Kafka-UI)
 
 > [!TIP]
 > **Minimum requirement: 3 node controller & 3 node broker**
@@ -628,7 +628,7 @@ WantedBy=multi-user.target
              └─6262 java -Xmx1G -Xms1G -server -XX:+UseG1GC -XX:MaxGCPauseMillis=20 -XX:InitiatingHeapOccupancyPercent=35 -XX:+ExplicitGCInvokesConcurrent -XX:MaxInlineLevel=15 -Djava.awt.headless=true "-Xlog>
 ```
 
-## Deploy Kafka UI (Optional)
+## Deploy Kafka UI
 > [!TIP]
 > **Require: docker, docker-compose**
 
