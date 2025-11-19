@@ -13,6 +13,7 @@
   - [Broker 02](#on-node-kafka-broker-02)
   - [Broker 03](#on-node-kafka-broker-03)
 - [Deploy Kafka UI (optional)](#Deploy-Kafka-UI)
+- [Expose Kafka JMX metrics (optional)](#Expose-Kafka-JMX-metrics)
 
 > [!TIP]
 > **Minimum requirement: 3 node controller & 3 node broker**
@@ -636,6 +637,8 @@ WantedBy=multi-user.target
 | :--- |
 | http://<SERVER_IP>:8080/ui/clusters/ |
 
+**Define docker-compose.yaml**
+
 ```
 # vi docker-compose.yaml
 
@@ -654,8 +657,99 @@ services:
       MANAGEMENT_HEALTH_LDAP_ENABLED: 'FALSE'
 ```
 
+**Start service**
 ```
 # docker-compose up -d
+[+] Running 1/1
+ ✔ Container kafka-cluster-ui  Started 
 ```
 
 ![Alt Text](img/KafkaUI-systemd.png)
+
+## Expose Kafka JMX metrics
+> [!TIP]
+> **Require: docker, docker-compose**
+
+| KAFKA NODE | URL ACCESS |
+| :--- | :--- |
+|  | | |
+
+
+**Generate JMX config for each kafka node**
+```
+# for host in kafka-controller-01 kafka-controller-02 kafka-controller-03 kafka-broker-01 kafka-broker-02 kafka-broker-03; do cp jmx_config_kafka-template.yml jmx_config_$host.yml; sed -i "s/^hostPort: <KAFKA_HOST>:<KAFKA_JMX_PORT>$/hostPort: ${host}:9999/" jmx_config_$host.yml; done
+```
+
+**Define docker-compose.yaml**
+```
+networks:
+  kafka-net:
+    driver: bridge
+services:
+  kafka-controller-01-jmx:
+    image: bitnamilegacy/jmx-exporter:1.3.0-debian-12-r1
+    container_name: kafka-controller-01-jmx
+    hostname: kafka-controller-01-jmx
+    restart: always
+    volumes:
+      - ./jmx_config_kafka-controller-01.yml:/opt/bitnami/jmx-exporter/examples/standalone_sample_config.yml:ro
+    ports:
+      - "7071:5556"
+  kafka-controller-02-jmx:
+    image: bitnamilegacy/jmx-exporter:1.3.0-debian-12-r1
+    container_name: kafka-controller-02-jmx
+    hostname: kafka-controller-02-jmx
+    restart: always
+    volumes:
+      - ./jmx_config_kafka-controller-02.yml:/opt/bitnami/jmx-exporter/examples/standalone_sample_config.yml:ro
+    ports:
+      - "7072:5556"
+  kafka-controller-03-jmx:
+    image: bitnamilegacy/jmx-exporter:1.3.0-debian-12-r1
+    container_name: kafka-controller-03-jmx
+    hostname: kafka-controller-03-jmx
+    restart: always
+    volumes:
+      - ./jmx_config_kafka-controller-03.yml:/opt/bitnami/jmx-exporter/examples/standalone_sample_config.yml:ro
+    ports:
+      - "7073:5556"
+  kafka-broker-01-jmx:
+    image: bitnamilegacy/jmx-exporter:1.3.0-debian-12-r1
+    container_name: kafka-broker-01-jmx
+    hostname: kafka-broker-01-jmx
+    restart: always
+    volumes:
+      - ./jmx_config_kafka-broker-01.yml:/opt/bitnami/jmx-exporter/examples/standalone_sample_config.yml:ro
+    ports:
+      - "7074:5556"
+  kafka-broker-02-jmx:
+    image: bitnamilegacy/jmx-exporter:1.3.0-debian-12-r1
+    container_name: kafka-broker-02-jmx
+    hostname: kafka-broker-02-jmx
+    restart: always
+    volumes:
+      - ./jmx_config_kafka-broker-02.yml:/opt/bitnami/jmx-exporter/examples/standalone_sample_config.yml:ro
+    ports:
+      - "7075:5556"
+  kafka-broker-03-jmx:
+    image: bitnamilegacy/jmx-exporter:1.3.0-debian-12-r1
+    container_name: kafka-broker-03-jmx
+    hostname: kafka-broker-03-jmx
+    restart: always
+    volumes:
+      - ./jmx_config_kafka-broker-03.yml:/opt/bitnami/jmx-exporter/examples/standalone_sample_config.yml:ro
+    ports:
+      - "7076:5556"
+```
+
+**Start service**
+```
+# docker-compose up -d
+[+] Running 6/6
+ ✔ Container kafka-broker-03-jmx      Started                                                                                                                                                               1.0s 
+ ✔ Container kafka-controller-03-jmx  Started                                                                                                                                                               0.9s 
+ ✔ Container kafka-controller-02-jmx  Started                                                                                                                                                               1.4s 
+ ✔ Container kafka-broker-02-jmx      Started                                                                                                                                                               1.3s 
+ ✔ Container kafka-broker-01-jmx      Started                                                                                                                                                               1.2s 
+ ✔ Container kafka-controller-01-jmx  Started
+```
