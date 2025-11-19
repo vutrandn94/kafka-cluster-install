@@ -681,6 +681,9 @@ services:
 
 
 **Generate JMX config for each kafka node**
+> [!TIP]
+> **"jmx_config_kafka-template.yml" attached on repository**
+
 ```
 # for host in kafka-controller-01 kafka-controller-02 kafka-controller-03 kafka-broker-01 kafka-broker-02 kafka-broker-03; do cp jmx_config_kafka-template.yml jmx_config_$host.yml; sed -i "s/^hostPort: <KAFKA_HOST>:<KAFKA_JMX_PORT>$/hostPort: ${host}:9999/" jmx_config_$host.yml; done
 ```
