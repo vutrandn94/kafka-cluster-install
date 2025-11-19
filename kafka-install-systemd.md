@@ -228,7 +228,6 @@ WantedBy=multi-user.target
 ```
 
 ```
-```
 # systemctl daemon-reload
 
 # systemctl start kafka-controller && systemctl enable kafka-controller
@@ -313,7 +312,7 @@ LimitNOFILE=100000
 WantedBy=multi-user.target
 ```
 
-```
+
 ```
 # systemctl daemon-reload
 
@@ -329,5 +328,4 @@ WantedBy=multi-user.target
         CPU: 4.953s
      CGroup: /system.slice/kafka-controller.service
              └─3334 java -Xmx1G -Xms1G -server -XX:+UseG1GC -XX:MaxGCPauseMillis=20 -XX:InitiatingHeapOccupancyPercent=35 -XX:+ExplicitGCInvokesConcurrent -XX:MaxInlineLevel=15 -Djava.awt.headless=true "-Xlog>
-
 ```
