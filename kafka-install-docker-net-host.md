@@ -297,3 +297,16 @@ services:
  ✔ Container kafka-cluster-ui  Started                                                                                                                                                                      0.4s 
  ✔ Container kafka-03-jmx      Started  
 ```
+
+## Kafka UI expose info
+
+| URL ACCESS |
+| :--- |
+| http://<KAFKA_SERVER_IP>:8080 |
+
+## Kafka expose Kafka JMX metrics
+| KAFKA NODE | URL ACCESS |
+| :--- | :--- |
+| kafka-01 | http://172.31.16.254:5556/metrics |
+| kafka-02 | http://172.31.17.55:5556/metrics |
+| kafka-03 | http://172.31.31.137:5556/metrics |
