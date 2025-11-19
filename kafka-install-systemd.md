@@ -12,7 +12,7 @@
   - [Broker 01](#on-node-kafka-broker-01)
   - [Broker 02](#on-node-kafka-broker-02)
   - [Broker 03](#on-node-kafka-broker-03)
-- [Deploy Kafka UI (optional)](#Deploy Kafka UI (Optional))
+- [Deploy Kafka UI](#Deploy Kafka UI (Optional))
 
 > [!TIP]
 > **Minimum requirement: 3 node controller & 3 node broker**
