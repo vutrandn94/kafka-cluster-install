@@ -672,7 +672,12 @@ services:
 
 | KAFKA NODE | URL ACCESS |
 | :--- | :--- |
-|  | | |
+| kafka-controller-01 | http://<DOCKER_SERVER_IP>:7071/metrics |
+| kafka-controller-02 | http://<DOCKER_SERVER_IP>:7072/metrics |
+| kafka-controller-03 | http://<DOCKER_SERVER_IP>:7073/metrics |
+| kafka-broker-01 | http://<DOCKER_SERVER_IP>:7074/metrics |
+| kafka-broker-02 | http://<DOCKER_SERVER_IP>:7075/metrics |
+| kafka-broker-03 | http://<DOCKER_SERVER_IP>:7076/metrics |
 
 
 **Generate JMX config for each kafka node**
