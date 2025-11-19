@@ -158,17 +158,6 @@ WantedBy=multi-user.target
         CPU: 5.743s
      CGroup: /system.slice/kafka-controller.service
              └─4865 java -Xmx1G -Xms1G -server -XX:+UseG1GC -XX:MaxGCPauseMillis=20 -XX:InitiatingHeapOccupancyPercent=35 -XX:+ExplicitGCInvokesConcurrent -XX:MaxInlineLevel=15 -Djava.awt.headless=true "-Xlog>
-
-Nov 19 04:07:11 kafka-controller-01 kafka-server-start.sh[4865]: [2025-11-19 04:07:11,564] INFO [MetadataLoader id=1] initializeNewPublishers: the loader is still catching up because we still don't know the h>
-Nov 19 04:07:11 kafka-controller-01 kafka-server-start.sh[4865]: [2025-11-19 04:07:11,664] INFO [MetadataLoader id=1] initializeNewPublishers: the loader is still catching up because we still don't know the h>
-Nov 19 04:07:11 kafka-controller-01 kafka-server-start.sh[4865]: [2025-11-19 04:07:11,739] INFO [RaftManager id=1] Node 2 disconnected. (org.apache.kafka.clients.NetworkClient)
-Nov 19 04:07:11 kafka-controller-01 kafka-server-start.sh[4865]: [2025-11-19 04:07:11,739] WARN [RaftManager id=1] Connection to node 2 (kafka-controller-02/172.31.17.55:9094) could not be established. Node m>
-Nov 19 04:07:11 kafka-controller-01 kafka-server-start.sh[4865]: [2025-11-19 04:07:11,739] INFO [RaftManager id=1] Node 3 disconnected. (org.apache.kafka.clients.NetworkClient)
-Nov 19 04:07:11 kafka-controller-01 kafka-server-start.sh[4865]: [2025-11-19 04:07:11,739] WARN [RaftManager id=1] Connection to node 3 (kafka-controller-03/172.31.31.137:9094) could not be established. Node >
-Nov 19 04:07:11 kafka-controller-01 kafka-server-start.sh[4865]: [2025-11-19 04:07:11,764] INFO [MetadataLoader id=1] initializeNewPublishers: the loader is still catching up because we still don't know the h>
-Nov 19 04:07:11 kafka-controller-01 kafka-server-start.sh[4865]: [2025-11-19 04:07:11,865] INFO [MetadataLoader id=1] initializeNewPublishers: the loader is still catching up because we still don't know the h>
-Nov 19 04:07:11 kafka-controller-01 kafka-server-start.sh[4865]: [2025-11-19 04:07:11,965] INFO [MetadataLoader id=1] initializeNewPublishers: the loader is still catching up because we still don't know the h>
-Nov 19 04:07:12 kafka-controller-01 kafka-server-start.sh[4865]: [2025-11-19 04:07:12,066] INFO [MetadataLoader id=1] initializeNewPublishers: the loader is still catching up because we still don't know the h>
 ```
 
 ### On node kafka-controller-02
@@ -255,16 +244,6 @@ WantedBy=multi-user.target
      CGroup: /system.slice/kafka-controller.service
              └─3246 java -Xmx1G -Xms1G -server -XX:+UseG1GC -XX:MaxGCPauseMillis=20 -XX:InitiatingHeapOccupancyPercent=35 -XX:+ExplicitGCInvokesConcurrent -XX:MaxInlineLevel=15 -Djava.awt.headless=true "-Xlog>
 
-Nov 19 04:14:05 kafka-controller-02 kafka-server-start.sh[3246]:  (org.apache.kafka.common.config.AbstractConfig)
-Nov 19 04:14:05 kafka-controller-02 kafka-server-start.sh[3246]: [2025-11-19 04:14:05,734] INFO [ControllerRegistrationManager id=2 incarnation=DkfHoW8ESHC2iyI7XRV2KA] sendControllerRegistration: attempting t>
-Nov 19 04:14:05 kafka-controller-02 kafka-server-start.sh[3246]: [2025-11-19 04:14:05,749] INFO [MetadataLoader id=2] InitializeNewPublishers: initializing DynamicClientQuotaPublisher controller id=2 with a s>
-Nov 19 04:14:05 kafka-controller-02 kafka-server-start.sh[3246]: [2025-11-19 04:14:05,754] INFO [MetadataLoader id=2] InitializeNewPublishers: initializing DynamicTopicClusterQuotaPublisher controller id=2 wi>
-Nov 19 04:14:05 kafka-controller-02 kafka-server-start.sh[3246]: [2025-11-19 04:14:05,755] INFO [MetadataLoader id=2] InitializeNewPublishers: initializing ScramPublisher controller id=2 with a snapshot at of>
-Nov 19 04:14:05 kafka-controller-02 kafka-server-start.sh[3246]: [2025-11-19 04:14:05,757] INFO [MetadataLoader id=2] InitializeNewPublishers: initializing DelegationTokenPublisher controller id=2 with a snap>
-Nov 19 04:14:05 kafka-controller-02 kafka-server-start.sh[3246]: [2025-11-19 04:14:05,760] INFO [MetadataLoader id=2] InitializeNewPublishers: initializing ControllerMetadataMetricsPublisher with a snapshot a>
-Nov 19 04:14:05 kafka-controller-02 kafka-server-start.sh[3246]: [2025-11-19 04:14:05,761] INFO [MetadataLoader id=2] InitializeNewPublishers: initializing AclPublisher controller id=2 with a snapshot at offs>
-Nov 19 04:14:05 kafka-controller-02 kafka-server-start.sh[3246]: [2025-11-19 04:14:05,793] INFO [ControllerRegistrationManager id=2 incarnation=DkfHoW8ESHC2iyI7XRV2KA] Our registration has been persisted to t>
-Nov 19 04:14:05 kafka-controller-02 kafka-server-start.sh[3246]: [2025-11-19 04:14:05,798] INFO [ControllerRegistrationManager id=2 incarnation=DkfHoW8ESHC2iyI7XRV2KA] RegistrationResponseHandler: controller 
 ```
 
 ### On node kafka-controller-03
@@ -351,14 +330,4 @@ WantedBy=multi-user.target
      CGroup: /system.slice/kafka-controller.service
              └─3334 java -Xmx1G -Xms1G -server -XX:+UseG1GC -XX:MaxGCPauseMillis=20 -XX:InitiatingHeapOccupancyPercent=35 -XX:+ExplicitGCInvokesConcurrent -XX:MaxInlineLevel=15 -Djava.awt.headless=true "-Xlog>
 
-Nov 19 04:19:02 kafka-controller-03 kafka-server-start.sh[3334]:         unstable.feature.versions.enable = false
-Nov 19 04:19:02 kafka-controller-03 kafka-server-start.sh[3334]:  (org.apache.kafka.common.config.AbstractConfig)
-Nov 19 04:19:02 kafka-controller-03 kafka-server-start.sh[3334]: [2025-11-19 04:19:02,134] INFO [MetadataLoader id=3] InitializeNewPublishers: initializing DynamicClientQuotaPublisher controller id=3 with a s>
-Nov 19 04:19:02 kafka-controller-03 kafka-server-start.sh[3334]: [2025-11-19 04:19:02,135] INFO [MetadataLoader id=3] InitializeNewPublishers: initializing DynamicTopicClusterQuotaPublisher controller id=3 wi>
-Nov 19 04:19:02 kafka-controller-03 kafka-server-start.sh[3334]: [2025-11-19 04:19:02,136] INFO [MetadataLoader id=3] InitializeNewPublishers: initializing ScramPublisher controller id=3 with a snapshot at of>
-Nov 19 04:19:02 kafka-controller-03 kafka-server-start.sh[3334]: [2025-11-19 04:19:02,137] INFO [MetadataLoader id=3] InitializeNewPublishers: initializing DelegationTokenPublisher controller id=3 with a snap>
-Nov 19 04:19:02 kafka-controller-03 kafka-server-start.sh[3334]: [2025-11-19 04:19:02,139] INFO [MetadataLoader id=3] InitializeNewPublishers: initializing ControllerMetadataMetricsPublisher with a snapshot a>
-Nov 19 04:19:02 kafka-controller-03 kafka-server-start.sh[3334]: [2025-11-19 04:19:02,140] INFO [MetadataLoader id=3] InitializeNewPublishers: initializing AclPublisher controller id=3 with a snapshot at offs>
-Nov 19 04:19:02 kafka-controller-03 kafka-server-start.sh[3334]: [2025-11-19 04:19:02,171] INFO [ControllerRegistrationManager id=3 incarnation=LEPEIxz_Sf-x7KyyPypmdA] RegistrationResponseHandler: controller >
-Nov 19 04:19:02 kafka-controller-03 kafka-server-start.sh[3334]: [2025-11-19 04:19:02,174] INFO [ControllerRegistrationManager id=3 incarnation=LEPEIxz_Sf-x7KyyPypmdA] Our registration has been persisted to t
 ```
