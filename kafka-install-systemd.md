@@ -635,7 +635,7 @@ WantedBy=multi-user.target
 
 | URL ACCESS |
 | :--- |
-| http://<SERVER_IP>:8080/ui/clusters/ |
+| http://<DOCKER_SERVER_IP>:8080/ui/clusters/ |
 
 **Define docker-compose.yaml**
 
