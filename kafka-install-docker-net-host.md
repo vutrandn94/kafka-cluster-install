@@ -4,6 +4,9 @@
 - [Lab info](#lab-info)
 - [Config hosts file](#Config-hosts-file)
 - [Install & Pre-config](#Install--Pre-config)
+- [Config on node kafka-01](#Config-on-node-kafka-01)
+- [Config on node kafka-02](#Config-on-node-kafka-02)
+- [Config on node kafka-03](#Config-on-node-kafka-03)
 
 > [!TIP]
 > Minimum requirement: 3 node (Combine between controller role and broker role), docker & docker-compose installed on server.
