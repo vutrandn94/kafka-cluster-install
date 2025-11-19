@@ -302,7 +302,9 @@ services:
 
 | URL ACCESS |
 | :--- |
-| http://<KAFKA_SERVER_IP>:8080 |
+| http://172.31.16.254:8080 |
+| http://172.31.17.55:8080 |
+| http://172.31.31.137:8080 |
 
 ## Kafka expose Kafka JMX metrics
 | KAFKA NODE | URL ACCESS |
