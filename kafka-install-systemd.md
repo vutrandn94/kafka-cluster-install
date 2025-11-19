@@ -12,6 +12,7 @@
   - [Broker 01](#on-node-kafka-broker-01)
   - [Broker 02](#on-node-kafka-broker-02)
   - [Broker 03](#on-node-kafka-broker-03)
+- [Deploy Kafka UI (optional)](#Deploy Kafka UI (Optional))
 
 > [!TIP]
 > **Minimum requirement: 3 node controller & 3 node broker**
@@ -345,6 +346,12 @@ WantedBy=multi-user.target
 ```
 
 ## Config broker nodes
+
+| LISTENER | USERNAME | PASSWORD |
+| :--- | :--- | :--- |
+| CLIENT://:9092 | admin | Enjoyd@y |
+| INTERNAL://:9093 | admin | Enjoyd@y2025 |
+
 ### On node kafka-broker-01
 **Apply broker config:**
 ```
@@ -620,3 +627,35 @@ WantedBy=multi-user.target
      CGroup: /system.slice/kafka-broker.service
              └─6262 java -Xmx1G -Xms1G -server -XX:+UseG1GC -XX:MaxGCPauseMillis=20 -XX:InitiatingHeapOccupancyPercent=35 -XX:+ExplicitGCInvokesConcurrent -XX:MaxInlineLevel=15 -Djava.awt.headless=true "-Xlog>
 ```
+
+## Deploy Kafka UI (Optional)
+> [!TIP]
+> **Require: docker, docker-compose**
+
+| URL ACCESS |
+| :--- |
+| http://<SERVER_IP>:8080/ui/clusters/ |
+
+```
+# vi docker-compose.yaml
+
+services:
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-cluster-ui
+    network_mode: host
+    restart: always
+    environment:
+      KAFKA_CLUSTERS_0_NAME: 'cluster-001'
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 'kafka-broker-01:9093,kafka-broker-02:9093,kafka-broker-03:9093'
+      KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"admin\" password=\"Enjoyd@y2025\";"
+      KAFKA_CLUSTERS_0_PROPERTIES_SASL_MECHANISM: 'PLAIN'
+      KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL: 'SASL_PLAINTEXT'
+      MANAGEMENT_HEALTH_LDAP_ENABLED: 'FALSE'
+```
+
+```
+# docker-compose up -d
+```
+
+![Alt Text](img/KafkaUI-systemd.png)
