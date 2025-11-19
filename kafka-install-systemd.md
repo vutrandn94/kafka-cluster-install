@@ -1,4 +1,18 @@
 # Kafka installation with systemd
+
+## Menu
+- [Lab info](#lab-info-3-controller-3-broker)
+- [Config hosts file](#config-hosts-file-on-all-nodes-controller--broker)
+- [Install & Pre-config](#install--pre-config-on-all-nodes-controller--broker)
+- [Config controller nodes](#config-controller-nodes)
+  - [Controller 01](#on-node-kafka-controller-01)
+  - [Controller 02](#on-node-kafka-controller-02)
+  - [Controller 03](#on-node-kafka-controller-03)
+- [Config broker nodes](#config-broker-nodes)
+  - [Broker 01](#on-node-kafka-broker-01)
+  - [Broker 02](#on-node-kafka-broker-02)
+  - [Broker 03](#on-node-kafka-broker-03)
+
 > [!TIP]
 > **Minimum requirement: 3 node controller & 3 node broker**
 
