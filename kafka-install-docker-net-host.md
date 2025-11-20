@@ -2,8 +2,8 @@
 
 ## Menu
 - [Lab info](#lab-info)
-- [Config hosts file](#Config-hosts-file)
-- [Install & Pre-config](#Install--Pre-config)
+- [Config hosts file](#Config-hosts-file-on-all-nodes)
+- [Install & Pre-config](#Install--Pre-config-on-all-nodes)
 - [Config on node kafka-01](#Config-on-node-kafka-01)
 - [Config on node kafka-02](#Config-on-node-kafka-02)
 - [Config on node kafka-03](#Config-on-node-kafka-03)
@@ -308,6 +308,8 @@ services:
 | http://172.31.16.254:8080 |
 | http://172.31.17.55:8080 |
 | http://172.31.31.137:8080 |
+
+![Alt Text](img/KafkaUI-docker-nethost.png)
 
 ## Kafka expose Kafka JMX metrics
 | KAFKA NODE | URL ACCESS |
