@@ -19,6 +19,12 @@
 | kafka-02 | 172.31.17.55 | Ubuntu 22.04.5 LTS | combine (controller & broker) | 2 | 54.255.145.37 |
 | kafka-03 | 172.31.31.137 | Ubuntu 22.04.5 LTS | combine (controller & broker) | 3 | 54.255.145.37 |
 
+| LISTENER | USERNAME | PASSWORD |
+| :--- | :--- | :--- |
+| CLIENT://:9092 | admin | Enjoyd@y2025 |
+| INTERNAL://:9093 | admin | Enjoyd@y2025 |
+
+
 ## Config hosts file on all nodes
 ```
 # vi /etc/hosts
