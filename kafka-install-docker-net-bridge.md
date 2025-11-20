@@ -1,3 +1,365 @@
 # Kafka installation with docker ((Network mode: bridge)
+
+## Menu
+- [Lab info](#Lab-info-3-node)
+- [Config hosts file](#Config-hosts-file-on-all-nodes)
+- [Install & Pre-config](#Install--Pre-config-on-all-nodes)
+- [Config on node kafka-01](#Config-on-node-kafka-01)
+- [Config on node kafka-02](#Config-on-node-kafka-02)
+- [Config on node kafka-03](#Config-on-node-kafka-03)
+- [Kafka UI expose info](#Kafka-UI-expose-info)
+- [Kafka expose Kafka JMX metrics](#Kafka-expose-Kafka-JMX-metrics)
+
 > [!TIP]
-> Minimum requirement: 3 node (Combine between controller role and broker role)
+> Minimum requirement: 1 server (Combine between controller role and broker role for 3 container) or 3 server (ombine between controller role and broker for each)
+## Lab info (3 node)
+| Hostname | IP Address | OS | Role | Node ID | Proxy Public IP |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| kafka-01 | 172.31.16.254 | Ubuntu 22.04.5 LTS | combine (controller & broker) | 1 | 54.255.145.37 |
+| kafka-02 | 172.31.17.55 | Ubuntu 22.04.5 LTS | combine (controller & broker) | 2 | 54.255.145.37 |
+| kafka-03 | 172.31.31.137 | Ubuntu 22.04.5 LTS | combine (controller & broker) | 3 | 54.255.145.37 |
+
+## Config hosts file on all nodes
+```
+# vi /etc/hosts
+
+172.31.16.254 kafka-01
+172.31.17.55 kafka-02
+172.31.31.137 kafka-03
+```
+
+## Install & pre-config on all nodes
+**Change default values system limit**
+```
+# vi /etc/systemd/system.conf
+
+DefaultLimitNOFILE=65000
+DefaultLimitNPROC=65000
+DefaultTasksMax=65000
+```
+
+**Config sysctl.conf**
+```
+# vi /etc/sysctl.conf
+
+net.ipv4.ip_forward=1
+kernel.randomize_va_space=2
+fs.suid_dumpable=0
+kernel.keys.root_maxbytes=25000000
+kernel.keys.root_maxkeys=1000000
+kernel.panic=10
+kernel.panic_on_oops=1
+vm.overcommit_memory=1
+vm.panic_on_oom=0
+fs.inotify.max_user_watches=524288
+fs.inotify.max_user_instances=1024
+```
+
+```
+# sysctl -p --system
+```
+
+**Define "kafka_server_jaas.conf" to set authentication for Kafka cluster**
+```
+# vi kafka_server_jaas.conf
+
+KafkaServer {
+  org.apache.kafka.common.security.plain.PlainLoginModule required
+  username="admin"
+  password="Enjoyd@y2025"
+  user_admin="Enjoyd@y2025";
+};
+```
+
+## Config on node kafka-01
+**Generate JMX config for each kafka node**
+> [!TIP]
+> **"jmx_config_kafka-template.yml" attached on repository**
+
+```
+# for host in kafka-01; do cp jmx_config_kafka-template.yml jmx_config_$host.yml; sed -i "s/^hostPort: <KAFKA_HOST>:<KAFKA_JMX_PORT>$/hostPort: ${host}:9999/" jmx_config_$host.yml; done
+```
+
+**Define docker-compose.yaml**
+```
+networks:
+  kafka-net:
+    driver: bridge
+
+services:
+  kafka-01:
+    image: confluentinc/cp-kafka:8.0.2
+    hostname: kafka-01
+    container_name: kafka-01
+    user: "0:0"
+    restart: always
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+      - "9094:9094"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_BROKER_ID: 1
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka-01:9094,2@kafka-02:9094,3@kafka-03:9094'
+      KAFKA_LISTENERS: 'CLIENT://:9092,INTERNAL://:9093,CONTROLLER://:9094'
+      KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://:9093,CLIENT://54.255.145.37:9092'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CLIENT:SASL_PLAINTEXT,INTERNAL:SASL_PLAINTEXT,CONTROLLER:PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'INTERNAL'
+      CLUSTER_ID: 'a50a310c-c42f-11f0-9c0d-02f2d2730ed1'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_MIN_INSYNC_REPLICAS: 2
+      KAFKA_SASL_ENABLED_MECHANISMS: 'PLAIN'
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: 'PLAIN'
+      KAFKA_OPTS: "-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf"
+      KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=9999 -Dcom.sun.management.jmxremote.rmi.port=9999 -Djava.rmi.server.hostname=kafka-01"
+    volumes:
+      - ./data:/var/lib/kafka/data
+      - ./kafka_server_jaas.conf:/etc/kafka/kafka_server_jaas.conf:ro
+    networks:
+      - kafka-net
+  kafka-01-jmx:
+    image: bitnamilegacy/jmx-exporter:1.3.0-debian-12-r1
+    container_name: kafka-01-jmx
+    hostname: kafka-01-jmx
+    restart: always
+    ports:
+      - "7071:5556"
+    volumes:
+      - ./jmx_config_kafka-01.yml:/opt/bitnami/jmx-exporter/examples/standalone_sample_config.yml:ro
+    depends_on:
+      - kafka-01
+    networks:
+      - kafka-net
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-cluster-ui
+    restart: always
+    ports:
+      - "9999:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: 'Test'
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 'kafka-01:9093,kafka-02:9093,kafka-03:9093'
+      KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"admin\" password=\"Enjoyd@y2025\";"
+      KAFKA_CLUSTERS_0_PROPERTIES_SASL_MECHANISM: 'PLAIN'
+      KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL: 'SASL_PLAINTEXT'
+      MANAGEMENT_HEALTH_LDAP_ENABLED: 'FALSE'
+    depends_on:
+      - kafka-01
+    networks:
+      - kafka-net
+```
+
+**Start service**
+```
+# docker-compose up -d
+[+] Running 4/4
+ ✔ Network kafka_kafka-net     Created                                                                                                                                                                      0.0s 
+ ✔ Container kafka-01          Started                                                                                                                                                                      0.5s 
+ ✔ Container kafka-01-jmx      Started                                                                                                                                                                      0.7s 
+ ✔ Container kafka-cluster-ui  Started                                                                                                                                                                      0.8s
+```
+
+## Config on node kafka-02
+**Generate JMX config for each kafka node**
+> [!TIP]
+> **"jmx_config_kafka-template.yml" attached on repository**
+
+```
+# for host in kafka-02; do cp jmx_config_kafka-template.yml jmx_config_$host.yml; sed -i "s/^hostPort: <KAFKA_HOST>:<KAFKA_JMX_PORT>$/hostPort: ${host}:9999/" jmx_config_$host.yml; done
+```
+
+**Define docker-compose.yaml**
+```
+networks:
+  kafka-net:
+    driver: bridge
+
+services:
+  kafka-02:
+    image: confluentinc/cp-kafka:8.0.2
+    hostname: kafka-02
+    container_name: kafka-02
+    user: "0:0"
+    restart: always
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+      - "9094:9094"
+    environment:
+      KAFKA_NODE_ID: 2
+      KAFKA_BROKER_ID: 2
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka-01:9094,2@kafka-02:9094,3@kafka-03:9094'
+      KAFKA_LISTENERS: 'CLIENT://:9092,INTERNAL://:9093,CONTROLLER://:9094'
+      KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://:9093,CLIENT://18.139.226.150:9092'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CLIENT:SASL_PLAINTEXT,INTERNAL:SASL_PLAINTEXT,CONTROLLER:PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'INTERNAL'
+      CLUSTER_ID: 'a50a310c-c42f-11f0-9c0d-02f2d2730ed1'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_MIN_INSYNC_REPLICAS: 2
+      KAFKA_SASL_ENABLED_MECHANISMS: 'PLAIN'
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: 'PLAIN'
+      KAFKA_OPTS: "-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf"
+      KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=9999 -Dcom.sun.management.jmxremote.rmi.port=9999 -Djava.rmi.server.hostname=kafka-02"
+    volumes:
+      - ./data:/var/lib/kafka/data
+      - ./kafka_server_jaas.conf:/etc/kafka/kafka_server_jaas.conf:ro
+    networks:
+      - kafka-net
+  kafka-02-jmx:
+    image: bitnamilegacy/jmx-exporter:1.3.0-debian-12-r1
+    container_name: kafka-02-jmx
+    hostname: kafka-02-jmx
+    restart: always
+    ports:
+      - "7071:5556"
+    volumes:
+      - ./jmx_config_kafka-02.yml:/opt/bitnami/jmx-exporter/examples/standalone_sample_config.yml:ro
+    depends_on:
+      - kafka-02
+    networks:
+      - kafka-net
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-cluster-ui
+    restart: always
+    ports:
+      - "9999:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: 'Test'
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 'kafka-01:9093,kafka-02:9093,kafka-03:9093'
+      KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"admin\" password=\"Enjoyd@y2025\";"
+      KAFKA_CLUSTERS_0_PROPERTIES_SASL_MECHANISM: 'PLAIN'
+      KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL: 'SASL_PLAINTEXT'
+      MANAGEMENT_HEALTH_LDAP_ENABLED: 'FALSE'
+    depends_on:
+      - kafka-02
+    networks:
+      - kafka-net
+```
+
+**Start service**
+```
+# docker-compose up -d
+[+] Running 4/4
+ ✔ Network kafka_kafka-net     Created                                                                                                                                                                      0.1s 
+ ✔ Container kafka-02          Started                                                                                                                                                                      0.5s 
+ ✔ Container kafka-cluster-ui  Started                                                                                                                                                                      0.8s 
+ ✔ Container kafka-02-jmx      Started                                                                                                                                                                      0.8s 
+```
+
+## Config on node kafka-03
+**Generate JMX config for each kafka node**
+> [!TIP]
+> **"jmx_config_kafka-template.yml" attached on repository**
+
+```
+# for host in kafka-03; do cp jmx_config_kafka-template.yml jmx_config_$host.yml; sed -i "s/^hostPort: <KAFKA_HOST>:<KAFKA_JMX_PORT>$/hostPort: ${host}:9999/" jmx_config_$host.yml; done
+```
+
+**Define docker-compose.yaml**
+```
+networks:
+  kafka-net:
+    driver: bridge
+
+services:
+  kafka-03:
+    image: confluentinc/cp-kafka:8.0.2
+    hostname: kafka-03
+    container_name: kafka-03
+    user: "0:0"
+    restart: always
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+      - "9094:9094"
+    environment:
+      KAFKA_NODE_ID: 3
+      KAFKA_BROKER_ID: 3
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka-01:9094,2@kafka-02:9094,3@kafka-03:9094'
+      KAFKA_LISTENERS: 'CLIENT://:9092,INTERNAL://:9093,CONTROLLER://:9094'
+      KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://:9093,CLIENT://18.139.226.150:9092'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CLIENT:SASL_PLAINTEXT,INTERNAL:SASL_PLAINTEXT,CONTROLLER:PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'INTERNAL'
+      CLUSTER_ID: 'a50a310c-c42f-11f0-9c0d-02f2d2730ed1'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 3
+      KAFKA_MIN_INSYNC_REPLICAS: 2
+      KAFKA_SASL_ENABLED_MECHANISMS: 'PLAIN'
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: 'PLAIN'
+      KAFKA_OPTS: "-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf"
+      KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=9999 -Dcom.sun.management.jmxremote.rmi.port=9999 -Djava.rmi.server.hostname=kafka-03"
+    volumes:
+      - ./data:/var/lib/kafka/data
+      - ./kafka_server_jaas.conf:/etc/kafka/kafka_server_jaas.conf:ro
+    networks:
+      - kafka-net
+  kafka-03-jmx:
+    image: bitnamilegacy/jmx-exporter:1.3.0-debian-12-r1
+    container_name: kafka-03-jmx
+    hostname: kafka-03-jmx
+    restart: always
+    ports:
+      - "7071:5556"
+    volumes:
+      - ./jmx_config_kafka-03.yml:/opt/bitnami/jmx-exporter/examples/standalone_sample_config.yml:ro
+    depends_on:
+      - kafka-03
+    networks:
+      - kafka-net
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-cluster-ui
+    restart: always
+    ports:
+      - "9999:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: 'Test'
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 'kafka-01:9093,kafka-02:9093,kafka-03:9093'
+      KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"admin\" password=\"Enjoyd@y2025\";"
+      KAFKA_CLUSTERS_0_PROPERTIES_SASL_MECHANISM: 'PLAIN'
+      KAFKA_CLUSTERS_0_PROPERTIES_SECURITY_PROTOCOL: 'SASL_PLAINTEXT'
+      MANAGEMENT_HEALTH_LDAP_ENABLED: 'FALSE'
+    depends_on:
+      - kafka-03
+    networks:
+      - kafka-net
+```
+
+**Start service**
+```
+# docker-compose up -d
+[+] Running 4/4
+ ✔ Network kafka_kafka-net     Created                                                                                                                                                                      0.0s 
+ ✔ Container kafka-03          Started                                                                                                                                                                      0.5s 
+ ✔ Container kafka-cluster-ui  Started                                                                                                                                                                      0.8s 
+ ✔ Container kafka-03-jmx      Started                                                                                                                                                                      0.7s
+```
+
+## Kafka UI expose info
+
+| URL ACCESS |
+| :--- |
+| http://172.31.16.254:9999 |
+| http://172.31.17.55:9999 |
+| http://172.31.31.137:9999 |
+
+![Alt Text](img/KafkaUI-docker-netbridge.png)
+
+## Kafka expose Kafka JMX metrics
+| KAFKA NODE | URL ACCESS |
+| :--- | :--- |
+| kafka-01 | http://172.31.16.254:7071/metrics |
+| kafka-02 | http://172.31.17.55:7071/metrics |
+| kafka-03 | http://172.31.31.137:7071/metrics |
