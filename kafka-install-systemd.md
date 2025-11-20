@@ -19,14 +19,14 @@
 > **Minimum requirement: 3 nodes controller & 3 nodes broker**
 
 ## Lab info (3 controller, 3 broker)
-| Hostname | IP Address | OS | Role | Node ID | Proxy Public IP |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| kafka-controller-01 | 172.31.16.254 | Ubuntu 22.04.5 LTS | controller | 1 | - |
-| kafka-controller-02 | 172.31.17.55 | Ubuntu 22.04.5 LTS | controller | 2 | - |
-| kafka-controller-03 | 172.31.31.137 | Ubuntu 22.04.5 LTS | controller | 3 | - |
-| kafka-broker-01 | 172.31.31.153 | Ubuntu 22.04.5 LTS | broker | 4 | 13.229.133.147 |
-| kafka-broker-02 | 172.31.16.244 | Ubuntu 22.04.5 LTS | broker | 5 | 13.229.133.147 |
-| kafka-broker-03 | 172.31.16.215 | Ubuntu 22.04.5 LTS | broker | 6 | 13.229.133.147 |
+| Hostname | IP Address | OS | Role | Node ID | Proxy Public IP | Log path |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| kafka-controller-01 | 172.31.16.254 | Ubuntu 22.04.5 LTS | controller | 1 | - | /opt/kafka/logs |
+| kafka-controller-02 | 172.31.17.55 | Ubuntu 22.04.5 LTS | controller | 2 | - | /opt/kafka/logs |
+| kafka-controller-03 | 172.31.31.137 | Ubuntu 22.04.5 LTS | controller | 3 | - | /opt/kafka/logs |
+| kafka-broker-01 | 172.31.31.153 | Ubuntu 22.04.5 LTS | broker | 4 | 13.229.133.147 | /opt/kafka/logs |
+| kafka-broker-02 | 172.31.16.244 | Ubuntu 22.04.5 LTS | broker | 5 | 13.229.133.147 | /opt/kafka/logs |
+| kafka-broker-03 | 172.31.16.215 | Ubuntu 22.04.5 LTS | broker | 6 | 13.229.133.147 | /opt/kafka/logs |
 
 ## Config hosts file on all nodes (controller & broker)
 ```
@@ -80,7 +80,7 @@ fs.inotify.max_user_instances=1024
 # tar -xvf kafka_2.13-4.1.1.tgz
 # mv kafka_2.13-4.1.1 kafka
 # chown -R kafka:kafka /opt/kafka
-# mkdir -p /var/lib/kafka/controller/{data,logs} /var/lib/kafka/broker/{data,logs}
+# mkdir -p /var/lib/kafka/controller/data /var/lib/kafka/broker/data
 # chown -R kafka:kafka /var/lib/kafka
 ```
 
@@ -112,7 +112,6 @@ controller.listener.names=CONTROLLER
 controller.quorum.voters=1@kafka-controller-01:9094,2@kafka-controller-02:9094,3@kafka-controller-03:9094
 controller.quorum.bootstrap.servers=kafka-controller-01:9094,kafka-controller-02:9094,kafka-controller-03:9094
 log.dir=/var/lib/kafka/controller/data
-logs.dir=/var/lib/kafka/controller/logs
 num.network.threads=3
 num.io.threads=8
 inter.broker.listener.name=INTERNAL
@@ -193,7 +192,6 @@ controller.listener.names=CONTROLLER
 controller.quorum.voters=1@kafka-controller-01:9094,2@kafka-controller-02:9094,3@kafka-controller-03:9094
 controller.quorum.bootstrap.servers=kafka-controller-01:9094,kafka-controller-02:9094,kafka-controller-03:9094
 log.dir=/var/lib/kafka/controller/data
-logs.dir=/var/lib/kafka/controller/logs
 num.network.threads=3
 num.io.threads=8
 inter.broker.listener.name=INTERNAL
@@ -278,7 +276,6 @@ controller.listener.names=CONTROLLER
 controller.quorum.voters=1@kafka-controller-01:9094,2@kafka-controller-02:9094,3@kafka-controller-03:9094
 controller.quorum.bootstrap.servers=kafka-controller-01:9094,kafka-controller-02:9094,kafka-controller-03:9094
 log.dir=/var/lib/kafka/controller/data
-logs.dir=/var/lib/kafka/controller/logs
 num.network.threads=3
 num.io.threads=8
 inter.broker.listener.name=INTERNAL
