@@ -1,7 +1,7 @@
 # Kafka installation with docker (Network mode: host)
 
 ## Menu
-- [Lab info](#Lab-info--3-node)
+- [Lab info](#Lab-info-3-node)
 - [Config hosts file](#Config-hosts-file-on-all-nodes)
 - [Install & Pre-config](#Install--Pre-config-on-all-nodes)
 - [Config on node kafka-01](#Config-on-node-kafka-01)
