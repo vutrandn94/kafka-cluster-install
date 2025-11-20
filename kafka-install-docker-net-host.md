@@ -12,8 +12,8 @@
 
 
 > [!TIP]
-> Minimum requirement: 3 node (Combine between controller role and broker role), docker & docker-compose installed on server.
-## Lab info (3 node)
+> Minimum requirement: 3 nodes (Combine between controller role and broker role), docker & docker-compose installed on server.
+## Lab info (3 nodes)
 | Hostname | IP Address | OS | Role | Node ID | Proxy Public IP |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | kafka-01 | 172.31.16.254 | Ubuntu 22.04.5 LTS | combine (controller & broker) | 1 | 52.221.180.79 |

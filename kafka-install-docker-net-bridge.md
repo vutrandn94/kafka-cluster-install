@@ -11,8 +11,12 @@
 - [Kafka expose Kafka JMX metrics](#Kafka-expose-Kafka-JMX-metrics)
 
 > [!TIP]
-> Minimum requirement: 1 server (Combine between controller role and broker role for 3 container) or 3 server (ombine between controller role and broker for each)
-## Lab info (3 node)
+> Minimum requirement: 1 server (Combine between controller role and broker role for 3 containers) or 3 servers (Combine between controller role and broker for each) and docker & docker-compose installed on server.
+
+> [!NOTE]
+> **In this turtorial, i praticed with case combine between controller role and broker for 3 servers**
+
+## Lab info (3 nodes)
 | Hostname | IP Address | OS | Role | Node ID | Proxy Public IP |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | kafka-01 | 172.31.16.254 | Ubuntu 22.04.5 LTS | combine (controller & broker) | 1 | 54.255.145.37 |
@@ -201,7 +205,7 @@ services:
       KAFKA_PROCESS_ROLES: 'broker,controller'
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka-01:9094,2@kafka-02:9094,3@kafka-03:9094'
       KAFKA_LISTENERS: 'CLIENT://:9092,INTERNAL://:9093,CONTROLLER://:9094'
-      KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://:9093,CLIENT://18.139.226.150:9092'
+      KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://:9093,CLIENT://54.255.145.37:9092'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CLIENT:SASL_PLAINTEXT,INTERNAL:SASL_PLAINTEXT,CONTROLLER:PLAINTEXT'
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       KAFKA_INTER_BROKER_LISTENER_NAME: 'INTERNAL'
@@ -293,7 +297,7 @@ services:
       KAFKA_PROCESS_ROLES: 'broker,controller'
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka-01:9094,2@kafka-02:9094,3@kafka-03:9094'
       KAFKA_LISTENERS: 'CLIENT://:9092,INTERNAL://:9093,CONTROLLER://:9094'
-      KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://:9093,CLIENT://18.139.226.150:9092'
+      KAFKA_ADVERTISED_LISTENERS: 'INTERNAL://:9093,CLIENT://54.255.145.37:9092'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CLIENT:SASL_PLAINTEXT,INTERNAL:SASL_PLAINTEXT,CONTROLLER:PLAINTEXT'
       KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
       KAFKA_INTER_BROKER_LISTENER_NAME: 'INTERNAL'

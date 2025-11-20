@@ -16,7 +16,7 @@
 - [Expose Kafka JMX metrics (optional)](#Expose-Kafka-JMX-metrics)
 
 > [!TIP]
-> **Minimum requirement: 3 node controller & 3 node broker**
+> **Minimum requirement: 3 nodes controller & 3 nodes broker**
 
 ## Lab info (3 controller, 3 broker)
 | Hostname | IP Address | OS | Role | Node ID | Proxy Public IP |
