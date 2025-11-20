@@ -1,9 +1,9 @@
 # Kafka installation with docker (Network mode: host)
 
 ## Menu
-- [Lab info](#lab-info)
-- [Config hosts file](#Config-hosts-file)
-- [Install & Pre-config](#Install--Pre-config)
+- [Lab info](#Lab-info-3-node)
+- [Config hosts file](#Config-hosts-file-on-all-nodes)
+- [Install & Pre-config](#Install--Pre-config-on-all-nodes)
 - [Config on node kafka-01](#Config-on-node-kafka-01)
 - [Config on node kafka-02](#Config-on-node-kafka-02)
 - [Config on node kafka-03](#Config-on-node-kafka-03)
@@ -19,6 +19,11 @@
 | kafka-01 | 172.31.16.254 | Ubuntu 22.04.5 LTS | combine (controller & broker) | 1 | 52.221.180.79 |
 | kafka-02 | 172.31.17.55 | Ubuntu 22.04.5 LTS | combine (controller & broker) | 2 | 52.221.180.79 |
 | kafka-03 | 172.31.31.137 | Ubuntu 22.04.5 LTS | combine (controller & broker) | 3 | 52.221.180.79 |
+
+| LISTENER | USERNAME | PASSWORD |
+| :--- | :--- | :--- |
+| CLIENT://:9092 | admin | Enjoyd@y2025 |
+| INTERNAL://:9093 | admin | Enjoyd@y2025 |
 
 ## Config hosts file on all nodes
 ```
@@ -308,6 +313,8 @@ services:
 | http://172.31.16.254:8080 |
 | http://172.31.17.55:8080 |
 | http://172.31.31.137:8080 |
+
+![Alt Text](img/KafkaUI-docker-nethost.png)
 
 ## Kafka expose Kafka JMX metrics
 | KAFKA NODE | URL ACCESS |
