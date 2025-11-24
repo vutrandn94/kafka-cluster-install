@@ -88,7 +88,7 @@ KafkaServer {
 
 **Define docker-compose.yaml**
 > [!NOTE]
-> Replace "-Duser.timezone=Asia/Ho_Chi_Minh" and "TZ: 'Asia/Ho_Chi_Minh'" with timezone available are you want.
+> Replace **"-Duser.timezone=Asia/Ho_Chi_Minh"** and **"TZ: 'Asia/Ho_Chi_Minh'"** with timezone available are you want.
 
 ```
 services:
@@ -171,7 +171,7 @@ services:
 
 **Define docker-compose.yaml**
 > [!NOTE]
-> Replace "-Duser.timezone=Asia/Ho_Chi_Minh" and "TZ: 'Asia/Ho_Chi_Minh'" with timezone available are you want.
+> Replace **"-Duser.timezone=Asia/Ho_Chi_Minh"** and **"TZ: 'Asia/Ho_Chi_Minh'"** with timezone available are you want.
 
 ```
 services:
@@ -254,7 +254,7 @@ services:
 
 **Define docker-compose.yaml**
 > [!NOTE]
-> Replace "-Duser.timezone=Asia/Ho_Chi_Minh" and "TZ: 'Asia/Ho_Chi_Minh'" with timezone available are you want.
+> Replace **"-Duser.timezone=Asia/Ho_Chi_Minh"** and **"TZ: 'Asia/Ho_Chi_Minh'"** with timezone available are you want.
 
 ```
 services:
