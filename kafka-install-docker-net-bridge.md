@@ -91,6 +91,9 @@ KafkaServer {
 ```
 
 **Define docker-compose.yaml**
+> [!NOTE]
+> Replace **"-Duser.timezone=Asia/Ho_Chi_Minh"** and **"TZ: 'Asia/Ho_Chi_Minh'"** with timezone available are you want.
+
 ```
 networks:
   kafka-net:
@@ -108,6 +111,7 @@ services:
       - "9093:9093"
       - "9094:9094"
     environment:
+      KAFKA_JVM_PERFORMANCE_OPTS: "-Duser.timezone=Asia/Ho_Chi_Minh"
       KAFKA_NODE_ID: 1
       KAFKA_BROKER_ID: 1
       KAFKA_PROCESS_ROLES: 'broker,controller'
@@ -136,6 +140,8 @@ services:
     container_name: kafka-01-jmx
     hostname: kafka-01-jmx
     restart: always
+    environment:
+      TZ: 'Asia/Ho_Chi_Minh'
     ports:
       - "7071:5556"
     volumes:
@@ -151,6 +157,7 @@ services:
     ports:
       - "9999:8080"
     environment:
+      TZ: 'Asia/Ho_Chi_Minh'
       KAFKA_CLUSTERS_0_NAME: 'Test'
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 'kafka-01:9093,kafka-02:9093,kafka-03:9093'
       KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"admin\" password=\"Enjoyd@y2025\";"
@@ -183,6 +190,9 @@ services:
 ```
 
 **Define docker-compose.yaml**
+> [!NOTE]
+> Replace **"-Duser.timezone=Asia/Ho_Chi_Minh"** and **"TZ: 'Asia/Ho_Chi_Minh'"** with timezone available are you want.
+
 ```
 networks:
   kafka-net:
@@ -200,6 +210,7 @@ services:
       - "9093:9093"
       - "9094:9094"
     environment:
+      KAFKA_JVM_PERFORMANCE_OPTS: "-Duser.timezone=Asia/Ho_Chi_Minh"
       KAFKA_NODE_ID: 2
       KAFKA_BROKER_ID: 2
       KAFKA_PROCESS_ROLES: 'broker,controller'
@@ -230,6 +241,8 @@ services:
     restart: always
     ports:
       - "7071:5556"
+    environment:
+      TZ: 'Asia/Ho_Chi_Minh'
     volumes:
       - ./jmx_config_kafka-02.yml:/opt/bitnami/jmx-exporter/examples/standalone_sample_config.yml:ro
     depends_on:
@@ -243,6 +256,7 @@ services:
     ports:
       - "9999:8080"
     environment:
+      TZ: 'Asia/Ho_Chi_Minh'
       KAFKA_CLUSTERS_0_NAME: 'Test'
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 'kafka-01:9093,kafka-02:9093,kafka-03:9093'
       KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"admin\" password=\"Enjoyd@y2025\";"
@@ -275,6 +289,9 @@ services:
 ```
 
 **Define docker-compose.yaml**
+> [!NOTE]
+> Replace **"-Duser.timezone=Asia/Ho_Chi_Minh"** and **"TZ: 'Asia/Ho_Chi_Minh'"** with timezone available are you want.
+
 ```
 networks:
   kafka-net:
@@ -292,6 +309,7 @@ services:
       - "9093:9093"
       - "9094:9094"
     environment:
+      KAFKA_JVM_PERFORMANCE_OPTS: "-Duser.timezone=Asia/Ho_Chi_Minh"
       KAFKA_NODE_ID: 3
       KAFKA_BROKER_ID: 3
       KAFKA_PROCESS_ROLES: 'broker,controller'
@@ -320,6 +338,8 @@ services:
     container_name: kafka-03-jmx
     hostname: kafka-03-jmx
     restart: always
+    environment:
+      TZ: 'Asia/Ho_Chi_Minh'
     ports:
       - "7071:5556"
     volumes:
@@ -335,6 +355,7 @@ services:
     ports:
       - "9999:8080"
     environment:
+      TZ: 'Asia/Ho_Chi_Minh'
       KAFKA_CLUSTERS_0_NAME: 'Test'
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 'kafka-01:9093,kafka-02:9093,kafka-03:9093'
       KAFKA_CLUSTERS_0_PROPERTIES_SASL_JAAS_CONFIG: "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"admin\" password=\"Enjoyd@y2025\";"
