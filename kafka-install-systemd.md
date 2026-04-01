@@ -119,6 +119,7 @@ group.initial.rebalance.delay.ms=0
 offsets.topic.replication.factor=3
 default.replication.factor=3
 min.insync.replicas=2
+num.partitions=3
 ```
 
 ```
@@ -199,6 +200,7 @@ group.initial.rebalance.delay.ms=0
 offsets.topic.replication.factor=3
 default.replication.factor=3
 min.insync.replicas=2
+num.partitions=3
 ```
 
 > [!NOTE]
@@ -283,6 +285,7 @@ group.initial.rebalance.delay.ms=0
 offsets.topic.replication.factor=3
 default.replication.factor=3
 min.insync.replicas=2
+num.partitions=3
 ```
 
 > [!NOTE]
@@ -372,6 +375,7 @@ group.initial.rebalance.delay.ms=0
 default.replication.factor=3
 offsets.topic.replication.factor=3
 min.insync.replicas=2
+num.partitions=3
 num.network.threads=3
 num.io.threads=8
 listeners=CLIENT://:9092,INTERNAL://:9093
@@ -464,6 +468,7 @@ group.initial.rebalance.delay.ms=0
 default.replication.factor=3
 offsets.topic.replication.factor=3
 min.insync.replicas=2
+num.partitions=3
 num.network.threads=3
 num.io.threads=8
 listeners=CLIENT://:9092,INTERNAL://:9093
@@ -556,6 +561,7 @@ group.initial.rebalance.delay.ms=0
 default.replication.factor=3
 offsets.topic.replication.factor=3
 min.insync.replicas=2
+num.partitions=3
 num.network.threads=3
 num.io.threads=8
 listeners=CLIENT://:9092,INTERNAL://:9093
